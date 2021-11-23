@@ -22,6 +22,25 @@ public class ConcurrentGUI {
     private static final double WIDTH_PERC = 0.2;
     private static final double HEIGHT_PERC = 0.1;
     private final JLabel display;
+    private final Agent agent;
+    private final JButton up = new JButton("up");
+    private final JButton down = new JButton("down");
+    private final JButton stop = new JButton("stop");
+
+    /**
+     * stop the agent.
+     */
+    protected void stopAgent() {
+        agent.stopCounting();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                up.setEnabled(false);
+                down.setEnabled(false);
+                stop.setEnabled(false);
+            }
+        });
+    }
 
     /**
      * Constructor.
@@ -32,15 +51,13 @@ public class ConcurrentGUI {
         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         frame.setSize((int) (screenSize.getWidth() * WIDTH_PERC), (int) (screenSize.getHeight() * HEIGHT_PERC));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        final JButton up = new JButton("up");
-        final JButton down = new JButton("down");
-        final JButton stop = new JButton("stop");
+
         display = new JLabel();
         display.setText("0");
         final JPanel panel = new JPanel();
         final JPanel canvas = new JPanel();
 
-        final Agent agent = new Agent();
+        agent = new Agent();
         up.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -56,13 +73,9 @@ public class ConcurrentGUI {
         });
 
         stop.addActionListener(new ActionListener() {
-
             @Override
             public void actionPerformed(final ActionEvent e) {
-                agent.stopCounting();
-                up.setEnabled(false);
-                down.setEnabled(false);
-                stop.setEnabled(false);
+                stopAgent();
             }
         });
 
