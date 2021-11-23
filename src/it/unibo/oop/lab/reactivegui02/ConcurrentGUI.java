@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 /**
  * A simple GUI app.
@@ -40,7 +41,6 @@ public class ConcurrentGUI {
         final JPanel canvas = new JPanel();
 
         final Agent agent = new Agent();
-        new Thread(agent).start();
         up.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(final ActionEvent e) {
@@ -65,6 +65,8 @@ public class ConcurrentGUI {
                 stop.setEnabled(false);
             }
         });
+
+        new Thread(agent).start();
 
         panel.setLayout(new BoxLayout(panel, BoxLayout.LINE_AXIS));
         panel.add(display);
@@ -96,16 +98,15 @@ public class ConcurrentGUI {
         @Override
         public void run() {
             while (!stop) {
+                counter += up ? +1 : -1;
                 final int countmoment = this.counter;
-                display.setText(Integer.toString(countmoment));
-                if (up) {
-                    counter++;
-                } else {
-                    if (countmoment > 0) {
-                        counter--;
-                    }
-                }
                 try {
+                    SwingUtilities.invokeLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            display.setText(Integer.toString(countmoment));
+                        }
+                    });
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
