@@ -58,26 +58,11 @@ public class ConcurrentGUI {
         final JPanel canvas = new JPanel();
 
         agent = new Agent();
-        up.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                agent.countUp();
-            }
-        });
+        up.addActionListener(e -> agent.countUp());
 
-        down.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                agent.countDown();
-            }
-        });
+        down.addActionListener(e -> agent.countDown());
 
-        stop.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(final ActionEvent e) {
-                stopAgent();
-            }
-        });
+        stop.addActionListener(e -> stopAgent());
 
         new Thread(agent).start();
 
@@ -114,12 +99,7 @@ public class ConcurrentGUI {
                 counter += up ? +1 : -1;
                 final int countmoment = this.counter;
                 try {
-                    SwingUtilities.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            display.setText(Integer.toString(countmoment));
-                        }
-                    });
+                    SwingUtilities.invokeLater(() -> display.setText(Integer.toString(countmoment)));
                     Thread.sleep(100);
                 } catch (InterruptedException e) {
                     e.printStackTrace();

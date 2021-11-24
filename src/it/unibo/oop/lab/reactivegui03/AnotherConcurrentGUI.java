@@ -16,7 +16,7 @@ public class AnotherConcurrentGUI extends ConcurrentGUI {
     }
 
     private class SleeperAgent implements Runnable {
-        private static final int STOP = 3200;
+        private static final int STOP = 3000;
 
         @Override
         public void run() {
