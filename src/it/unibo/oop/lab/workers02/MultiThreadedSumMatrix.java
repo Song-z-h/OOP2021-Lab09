@@ -7,7 +7,7 @@ import java.util.List;
  * This is a standard implementation of the calculation.
  * 
  */
-public static class MultiThreadedSumMatrix implements SumMatrix {
+public class MultiThreadedSumMatrix implements SumMatrix {
 
     private final int nthread;
 
@@ -23,9 +23,16 @@ public static class MultiThreadedSumMatrix implements SumMatrix {
     private static class Workers extends Thread {
 
         public double sum(final double[][] matrix) {
-            final List<Workers> workers = new ArrayList<>(nthread);
+            return 0;
+            //final List<Workers> workers = new ArrayList<>(nthread);
         }
 
+    }
+
+    @Override
+    public double sum(double[][] matrix) {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }
