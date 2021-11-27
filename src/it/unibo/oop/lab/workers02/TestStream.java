@@ -1,15 +1,12 @@
 package it.unibo.oop.lab.workers02;
 
 import java.util.Arrays;
-import java.util.PrimitiveIterator.OfInt;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * test.
  */
 public final class TestStream {
-    static final int N = 10;
 
     private TestStream() {
     }
@@ -34,8 +31,14 @@ public final class TestStream {
      * 
      * @return matrix
      */
-    public static int[][] fillMatrix() {
-        return IntStream.range(0, N).mapToObj(r -> IntStream.range(0, N).map(c -> c + 1).toArray()).toArray(int[][]::new);
+    public static int[][] fillMatrixParallel(final int NUM) {
+        return IntStream.iterate(1, row -> row + NUM).limit(NUM).parallel()
+                .mapToObj(row -> IntStream.range(0, NUM).map(c -> c + row).toArray()).toArray(int[][]::new);
+    }
+
+    public static int[][] fillMatrix(final int NUM) {
+        return IntStream.iterate(1, row -> row + NUM).limit(NUM).parallel()
+                .mapToObj(row -> IntStream.range(0, NUM).map(c -> c + row).toArray()).toArray(int[][]::new);
     }
 
     /**
@@ -62,12 +65,19 @@ public final class TestStream {
          * System.out.println("performance : time1 " + time1 + "ms time2 " + time2 +
          * "ms");
          */
+        final int N = 40000;
+         long time = System.currentTimeMillis();
 
-        int[][] mat;
+         int[][] mat = fillMatrix(N);
+         mat = null;
 
-        mat = fillMatrix();
-        printMatrix(mat);
-
+        System.out.println("no parallel : time" + (System.currentTimeMillis() - time) + " ms");
+        
+        time = System.currentTimeMillis();
+        mat = fillMatrixParallel(N);
+        
+        System.out.println("parallel : time" + (System.currentTimeMillis() - time) + " ms");
+        // printMatrix(mat);
     }
 
 }
