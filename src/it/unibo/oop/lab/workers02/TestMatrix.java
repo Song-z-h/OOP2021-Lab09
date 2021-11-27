@@ -30,7 +30,7 @@ public class TestMatrix {
      * output, ad eccezione ovviamente dei tempi.
      */
 
-    private static final int SIZE = 10_000;
+    private static final int SIZE = 1000;
     private static final double EXPECTED_DELTA = 0.01;
     private static final String MSEC = " msec";
 
@@ -50,9 +50,10 @@ public class TestMatrix {
         System.out.println("BTW: the sum with " + SIZE + "*" + SIZE + " elements is: " + sum);
         long time;
         for (final int threads: new int[] { 1, 2, 3, 8, 16, 32, 100 }) {
-            final SumMatrix sumList = new MultiThreadedSumMatrix(threads);
+            final SumMatrix sumList = new MultiThreadedSumMatrixWithStream(threads);
             time = System.nanoTime();
-            assertEquals(sum, sumList.sum(matrix), EXPECTED_DELTA);
+            final double fisum = sumList.sum(matrix);
+            assertEquals(sum, fisum, EXPECTED_DELTA);
             time = System.nanoTime() - time;
             System.out.println("Tried with " + threads + " thread"
                     + (threads == 1 ? "" : "s") + ": "

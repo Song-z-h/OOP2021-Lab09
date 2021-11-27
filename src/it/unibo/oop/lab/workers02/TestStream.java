@@ -1,6 +1,9 @@
 package it.unibo.oop.lab.workers02;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
@@ -37,8 +40,12 @@ public final class TestStream {
     }
 
     public static int[][] fillMatrix(final int NUM) {
-        return IntStream.iterate(1, row -> row + NUM).limit(NUM).parallel()
+        return IntStream.iterate(1, row -> row + NUM).limit(5).parallel()
                 .mapToObj(row -> IntStream.range(0, NUM).map(c -> c + row).toArray()).toArray(int[][]::new);
+    }
+
+    public static List<List<int[]>> matrixToList(final int[][] mat) {
+        return Arrays.stream(mat).map(Arrays::asList).collect(Collectors.toList());
     }
 
     /**
@@ -49,35 +56,15 @@ public final class TestStream {
      */
     public static void main(final String[] args) {
 
-        /*
-         * long time1 = System.currentTimeMillis(); Stream.iterate(0, i -> i +
-         * 1).limit(N).map(i -> i * 2).reduce(Integer::sum);
-         * 
-         * time1 = System.currentTimeMillis() - time1;
-         * 
-         * long time2 = System.currentTimeMillis();
-         * 
-         * Stream.iterate(0, i -> i + 1).parallel().limit(N).map(i -> i *
-         * 3).reduce(Integer::sum);
-         * 
-         * time2 = System.currentTimeMillis() - time2;
-         * 
-         * System.out.println("performance : time1 " + time1 + "ms time2 " + time2 +
-         * "ms");
-         */
-        final int N = 40000;
-         long time = System.currentTimeMillis();
+        final List<Integer> li = List.of(10, 20, 30, 5, 6, 7, 10, 20, 100);
+        System.out.println(li);
+        li.stream()
+        .flatMap(i -> List.of(i, i + 1)
+                .stream()
+                .map(String::valueOf)
+                .map(","::concat))
+        .forEach(System.out::print);
 
-         int[][] mat = fillMatrix(N);
-         mat = null;
-
-        System.out.println("no parallel : time" + (System.currentTimeMillis() - time) + " ms");
-        
-        time = System.currentTimeMillis();
-        mat = fillMatrixParallel(N);
-        
-        System.out.println("parallel : time" + (System.currentTimeMillis() - time) + " ms");
-        // printMatrix(mat);
     }
 
 }
